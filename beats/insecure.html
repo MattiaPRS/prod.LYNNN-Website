@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insecure — prod. LŸNNN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #080808;
+      --near-black: #111111;
+      --panel: #161616;
+      --border: #222222;
+      --white: #f0ece4;
+      --dim: #888880;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      min-height: 100vh;
+      cursor: crosshair;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.4rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-back {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--dim);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-back:hover { color: var(--white); }
+
+    /* ── HERO BEAT ── */
+    .beat-hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 70px;
+    }
+
+    .hero-visual {
+      position: relative;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(25%) brightness(0.85);
+      transition: transform 8s ease;
+    }
+
+    .hero-visual:hover img { transform: scale(1.04); }
+
+    .hero-visual .vignette {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 60%, var(--black) 100%);
+    }
+
+    /* ── INFO PANEL ── */
+    .hero-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 3.5rem;
+      background: var(--black);
+      border-left: 1px solid var(--border);
+    }
+
+    .beat-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .beat-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      line-height: 0.9;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .beat-specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spec-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .spec-value {
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    /* ── LICENCES ── */
+    .licences {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .licence-card {
+      border: 1px solid var(--border);
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .licence-card:hover { border-color: #444; background: var(--panel); }
+
+    .licence-card.featured {
+      border-color: var(--white);
+    }
+
+    .licence-info .licence-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+    }
+
+    .licence-info .licence-desc {
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    .licence-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .licence-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--white);
+    }
+
+    .btn-licence {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--dim);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-licence:hover,
+    .licence-card.featured .btn-licence {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+
+    /* ── CONTACT LINE ── */
+    .contact-line {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+      line-height: 2;
+    }
+
+    .contact-line a {
+      color: var(--white);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.15s;
+    }
+
+    .contact-line a:hover { border-color: var(--white); }
+
+    /* ── DESCRIPTION SECTION ── */
+    .beat-desc {
+      background: var(--near-black);
+      border-top: 1px solid var(--border);
+      padding: 4rem 2rem;
+    }
+
+    .beat-desc-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .beat-desc h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.5rem;
+    }
+
+    .beat-desc p {
+      font-size: 0.75rem;
+      line-height: 2.2;
+      color: #aaa;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: #444;
+      text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .beat-hero { grid-template-columns: 1fr; }
+      .hero-visual { min-height: 50vw; }
+      .hero-info { padding: 2.5rem 1.5rem; }
+      .beat-specs { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="../index.html">LŸNNN</a>
+    <a class="nav-back" href="../index.html">← Retour au catalogue</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="beat-hero">
+
+    <!-- VISUEL : image directement dans hero-visual, chemin ../images/ -->
+    <div class="hero-visual">
+      <img src="../images/1.jpg" alt="Insecure" />
+      <div class="vignette"></div>
+    </div>
+
+    <!-- INFO -->
+    <div class="hero-info">
+      <div class="beat-tag">prod. LŸNNN — Jolagreen23 x Keeqaid Type Beat</div>
+
+      <div class="beat-title">~ Insecure</div>
+
+      <div class="beat-specs">
+        <div class="spec-item">
+          <div class="spec-label">BPM</div>
+          <div class="spec-value">149</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Tonalité</div>
+          <div class="spec-value">B minor</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Année</div>
+          <div class="spec-value">2026</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Durée</div>
+          <div class="spec-value">2:40</div>
+        </div>
+      </div>
+
+      <!-- LICENCES -->
+      <div class="licences">
+
+        <div class="licence-card">
+          <div class="licence-info">
+            <div class="licence-name">MP3 Lease</div>
+            <div class="licence-desc">Streaming non-commercial · 2 500 distrib.</div>
+          </div>
+          <div class="licence-right">
+            <div class="licence-price">19 €</div>
+            <a class="btn-licence" href="https://buy.stripe.com/aFabJ02NU3lod1g0OQ43S00">Acheter</a>
+          </div>
+        </div>
+
+        <div class="licence-card featured">
+          <div class="licence-info">
+            <div class="licence-name">WAV Lease</div>
+            <div class="licence-desc">Distrib. commerciale · 10 000 distrib.</div>
+          </div>
+          <div class="licence-right">
+            <div class="licence-price">29 €</div>
+            <a class="btn-licence" href="https://buy.stripe.com/00w8wOewC4ps3qG41243S01">Acheter</a>
+          </div>
+        </div>
+
+        <div class="licence-card">
+          <div class="licence-info">
+            <div class="licence-name">Exclusif</div>
+            <div class="licence-desc">Droits complets — usage illimité</div>
+          </div>
+          <div class="licence-right">
+            <div class="licence-price">149 €</div>
+            <a class="btn-licence" href="https://buy.stripe.com/3cI3cufAGe025yO41243S02">Acheter</a>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="contact-line">
+        Questions ? <a href="mailto:prodlynnn@gmail.com">prodlynnn@gmail.com</a><br/>
+        Instagram : <a href="https://www.instagram.com/prod.lynnn/" target="_blank">@prod.lynnn</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <section class="beat-desc">
+    <div class="beat-desc-inner">
+      <h2>Tags</h2>
+      <p>
+        free type beat, jolagreen23 type beat, keeqaid type beat, jolagreen23 keeqaid type beat, insecure type beat, free beat 2025, free rap beat, free rap instrumental, rap instrumental 2025, type beat 2025, free type beat 2025, sad type beat, emotional type beat, melancho type beat, dark type beat, moody type beat, insecure beat, free insecure beat, jolagreen23 instrumental, keeqaid instrumental, free drill type beat, drill type beat 2025, uk drill type beat, french drill type beat, trap type beat, free trap beat, trap beat 2025, free trap type beat 2025, melodic type beat, melodic rap beat, free melodic type beat
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2026 prod. LŸNNN — tous droits réservés
+  </footer>
+
+</body>
+</html>
